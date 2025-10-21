@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { AboutMe } from "../components/AboutMe"
 import { ContactSection } from "../components/ContactSection"
 import { FooterSection } from "../components/FooterSection"
@@ -8,12 +9,34 @@ import { SkillsSection } from "../components/SkillsSection"
 import { StarBackground } from "../components/StarBackground"
 
 export const Home = () => {
+    const [isDarkMode, setIsDarkMode] = useState(false);         // default = light mode
+
+    // Initial theme check on load
+    useEffect(() => {
+        const storedTheme = localStorage.getItem("theme");
+        const isDark = ( storedTheme === "dark" || document.documentElement.classList.add("dark") );
+        setIsDarkMode(isDark);
+    }, []);
+
+    const toggleTheme = () => {
+        const newIsDark = !isDarkMode;                          // Flips mode
+        setIsDarkMode(newIsDark);
+
+        if (newIsDark) {
+            document.documentElement.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+    }
+
     return (
         <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-            {/* Background effects */}
-            <StarBackground/>
+            {/* Background effects rendered only in dark mode*/}
+            { isDarkMode && <StarBackground/> }
             <header>
-                <Navbar/>
+                <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme}/>
             </header>
             <main>
                 <HeroSection/>

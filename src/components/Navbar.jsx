@@ -11,28 +11,29 @@ const navItems = [
     {name: "Contact", href: "#contact", svgLogo: <Contact/> },    
 ];
 
-export const Navbar = () => {
+export const Navbar = ({ isDarkMode, toggleTheme }) => {
+
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);         // for mobile menu
 
     // check if they have scrolled more than height=10
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.screenY > 10);
-        };
+        const handleScroll = () => setIsScrolled(window.scrollY > 10);
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // useEffect is not currently working, & isScrolled is not properly applied.
+    // Stop scroll while mobile menu is OPEN
+    useEffect(() => {
+        isMenuOpen ? document.body.style.overflow = "hidden" : document.body.style.overflow = "";
+        return () => document.body.style.overflow = "";     // cleanup
+    }, [isMenuOpen]);
 
     return (
         <nav className={classNs(
             "fixed w-full z-40 transition-all duration-300",
             isScrolled ? "py-3 shadow-xs bg-background/70 backdrop-blur-md" : "py-5"
-            // isScrolled ? "py-5" : "py-3 bg-background/70 backdrop-blur-md shadow-xs"
-            // isScrolled ? "bg-blue-500" : "bg-red-400"
             )}>
             <div className="container flex items-center justify-between">
                 <a href="#hero" className="text-xl font-bold text-primary flex items-center">
@@ -51,7 +52,7 @@ export const Navbar = () => {
                             <span>{ item.name }</span>
                         </a>
                     ))}
-                    <ThemeToggle/>
+                    <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme}/>
                 </div>
                 {/* Mobile Navbar */}
                 <button 
@@ -68,7 +69,7 @@ export const Navbar = () => {
                     </span>
                 </button>
                 <div className={classNs(
-                    "fixed inset-0 bg-background/95 backdrop-blur-md z-40",
+                    "fixed inset-0 h-screen bg-background/85 backdrop-blur-md z-40",
                     "flex flex-col items-center justify-center transition-all duration-300 md:hidden",
                     isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                     )}>
@@ -83,7 +84,7 @@ export const Navbar = () => {
                                 <span>{ item.name }</span>
                             </a>
                         ))}
-                        <ThemeToggle/>
+                        <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme}/>
                     </div>
                 </div>
             </div>
