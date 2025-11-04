@@ -11,13 +11,23 @@ import { StarBackground } from "../components/StarBackground"
 export const Home = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);         // default = light mode
 
-    // Initial theme check on load
+    // Initial theme check on page load
     useEffect(() => {
         const storedTheme = localStorage.getItem("theme");
-        const isDark = ( storedTheme === "dark" || document.documentElement.classList.add("dark") );
-        setIsDarkMode(isDark);
+        // Check User's preference for dark mode
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const useDark =  storedTheme === "dark" || ( !storedTheme && prefersDark );
+
+        if (useDark) {
+            document.documentElement.classList.add("dark");
+            setIsDarkMode(true);
+        } else {
+            document.documentElement.classList.remove("dark");
+            setIsDarkMode(false);
+        }
     }, []);
 
+    // Toggles theme & stores it
     const toggleTheme = () => {
         const newIsDark = !isDarkMode;                          // Flips mode
         setIsDarkMode(newIsDark);
