@@ -2,6 +2,7 @@ import { Instagram, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react"
 import { classNs } from "../lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import { useState } from "react";
+import { Globe } from "./Globe";
 
 export const ContactSection = () => {
     const { toast } = useToast();
@@ -23,7 +24,7 @@ export const ContactSection = () => {
     return (
         <section id="contact" className="py-24 px-4 relative bg-secondary/30">
             <div className="container mx-auto max-w-5xl">
-                <h2 className="text-xl md:text-4xl font-bold mb-4 text-center">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
                     Get In <span className="text-primary"> Touch</span>
                 </h2>
                 <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
@@ -56,7 +57,7 @@ export const ContactSection = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-medium">
-                                        <a href="" target="_blank"
+                                        <a href="" target="_blank" rel="noopener noreferrer"
                                             className="text-muted-foreground hover:text-primary transition-colors">
                                             LinkedIn
                                         </a>
@@ -70,7 +71,7 @@ export const ContactSection = () => {
                                 </div>
                                 <div>
                                     <h4 className="font-medium">
-                                        <a href="" target="_blank"
+                                        <a href="" target="_blank" rel="noopener noreferrer"
                                             className="text-muted-foreground hover:text-primary transition-colors">
                                             Instagram
                                         </a>
@@ -100,12 +101,14 @@ export const ContactSection = () => {
                                 </div>
                             </div> */}
                         </div>
+                        {/* Globe component */}
+                        <Globe />
                     </div>
 
                     {/* Right side */}
-                    <div className="bg-card p-8 rounded-lg shadow-xs" onSubmit={ handleSubmit }>
+                    <div className="bg-card p-8 rounded-lg shadow-xs" >
                         <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
-                        <form action="" className="space-y-6">
+                        <form action="" onSubmit={ handleSubmit } className="space-y-6">
                             <div>
                                 {/* Need to add "autocomplete" attribute for the 2 inputs */}
                                 <label htmlFor="name" className="block text-sm font-medium mb-2">Your Name</label>

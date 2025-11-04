@@ -16,7 +16,7 @@ const projects = [
         title: "Kanban PWA",
         description: "A page for the website 2",
         image: imageMap['kanban_pwa.png'],
-        tags: ["React", "Tailwind"],
+        tags: ["React", "Tailwind", "Vite SWR"],
         demoUrl: "https://kanban-pwa.netlify.app/",
         githubUrl: "https://github.com/karthi1048/kanban-PWA.git",
     },
@@ -87,12 +87,12 @@ export const ProjectsSection = () => {
                                 <div className="flex justify-between items-center">
                                     <div className="flex space-x-3">
                                         <a 
-                                            href={project.demoUrl} target="_blank"
+                                            href={project.demoUrl} target="_blank" rel="noopener noreferrer"
                                             className="text-foreground/80 hover:text-primary transition-colors duration-300">
                                             <ExternalLink size={20}/>
                                         </a>
                                         <a 
-                                            href={project.githubUrl} target="_blank"
+                                            href={project.githubUrl} target="_blank" rel="noopener noreferrer"
                                             className="text-foreground/80 hover:text-primary transition-colors duration-300">
                                             <Github size={20}/>
                                         </a>
@@ -105,7 +105,7 @@ export const ProjectsSection = () => {
 
                 <div className="text-center mt-12">
                     {/* Set the "role" to be button */}
-                    <a href="https://www.github.com/karthi1048" target="_blank" 
+                    <a href="https://www.github.com/karthi1048" target="_blank" rel="noopener noreferrer"
                         className="cosmic-button w-fit flex items-center mx-auto gap-2">
                         Check My Github <ArrowRight size={16}/>
                     </a>

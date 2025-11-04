@@ -13,7 +13,7 @@ const skills = [
     {name: "Bootstrap", level: 75, category: "frontend", icon: svgMap['bootstrap']},
 
     {name: "Node.js", level: 30, category: "backend", icon: svgMap["nodejs"]},
-    {name: "MYSQL", level: 60, category: "backend", icon: svgMap["mysql"]},
+    {name: "MySQL", level: 60, category: "backend", icon: svgMap["mysql"]},
 
     {name: "Git/Github", level: 80, category: "tools", icon: svgMap["git"]},
     {name: "Vite", level: 80, category: "tools", icon: svgMap['vite']},

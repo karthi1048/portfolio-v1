@@ -10,9 +10,9 @@ export const AboutMe = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Left side */}
                     <div className="space-y-6">
-                        <h3 className="text-2xl font-semibold">Passionate Web Developer & Tech Creator</h3>
+                        <h3 className="text-2xl font-semibold">Passionate Web Developer & Learner</h3>
                         <p className="text-muted-foreground">
-                            With over 5 years of experience in web development, I specialize in creating responsive, accessible,
+                            With one year of experience in web development, I specialize in creating responsive, accessible,
                             & performant web applications using modern technologies.
                         </p>
                         <p className="text-muted-foreground">
@@ -24,7 +24,7 @@ export const AboutMe = () => {
                                 Get In Touch
                             </a>
                             {/* CV */}
-                            <a href="" className="px-6 py-2 flex gap-2 rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300">
+                            <a href="" className="px-6 py-2 flex gap-2 justify-center rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300">
                                 <span>View My CV</span>
                                 <FileText/>
                             </a>
@@ -69,7 +69,7 @@ export const AboutMe = () => {
                                 <div className="text-left">
                                     <h4 className="font-semibold text-lg">Project Management</h4>
                                     <p className="text-muted-foreground">
-                                        Leading projects from conception to completion with agile methodologies.
+                                        Managing projects from conception to completion with agile methodologies.
                                     </p>
                                 </div>
                             </div>

@@ -3,9 +3,9 @@ import { ArrowUp } from "lucide-react"
 
 export const FooterSection = () => {
     return (
-        <footer className="py-12 px-4 bg-card relative border-t border-border mt-12 pt-8 flex flex-wrap justify-between items-center">
+        <footer className="py-12 px-6 bg-card relative border-t border-border mt-12 pt-8 flex flex-wrap gap-3 justify-around items-center">
             <p className="text-sm text-muted-foreground">
-                &copy; {new Date().getFullYear()} Karthi's Portfolio, All rights reserved.
+                &copy; {new Date().getFullYear()} Karthi's Portfolio. All rights reserved.
             </p>
 
             <a href="#hero" 

@@ -4,8 +4,8 @@ Github: https://github.com/karthi1048/portfolio-v1
 Location: India
 
 /* SITE */
-Site: https://your-domain.com
-Technology: React, Tailwind CSS, Vite, Javascript, CSS
+Site: https://portfolio-v1-mu-ruby.vercel.app
+Technology: React, JSX, Tailwind CSS, Vite, Javascript, CSS
 Description: A personal portfolio website showcasing my work, projects & skills.
 
 /* THANKS */
