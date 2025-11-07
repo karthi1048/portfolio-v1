@@ -29,50 +29,43 @@ const categories = ["all", "frontend", "backend", "tools", "others"];
 
 export const SkillsSection = () => {
     const [activeCategory, setActiveCategory] = useState("all");
-    const sectionRef = useRef(null);
-    const isVisible = useOnScreen(sectionRef, "-100px");      // small margin for early trigger
 
     const filteredSkills = skills.filter((skill) => (
         activeCategory === "all" || skill.category === activeCategory
     ));
 
     return (
-        <section id="skills" ref={sectionRef} 
-            className={`py-24 px-4 relative bg-secondary/30 transition-all duration-700 ease-out transform ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}>
-            <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-                    My <span className="text-primary"> Skills</span>
-                </h2>
+        <div className="container mx-auto max-w-5xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+                My <span className="text-primary"> Skills</span>
+            </h2>
 
-                {/* Category filter */}
-                <h3 className="font-semibold text-xl flex gap-3 mb-4 ml-2">
-                    <Filter/>
-                    <span>Filter</span>
-                </h3>
-                <div className="flex flex-wrap gap-4 mb-12">
-                    {categories.map((category, key) => (
-                        <button 
-                            key={key} 
-                            onClick={ () => setActiveCategory(category) }
-                            className={ classNs("px-5 py-2 rounded-full transition-colors duration-700 capitalize",
-                                activeCategory === category 
-                                    ? "bg-primary text-primary-foreground" 
-                                    : "bg-secondary/70 text-foreground hover:bg-secondary"
-                            )}>
-                            {category}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredSkills.map((skill, key) => (
-                        <SkillCard key={key} skill={skill} delay={key * 80}/>
-                    ))}
-                </div>
+            {/* Category filter */}
+            <h3 className="font-semibold text-xl flex gap-3 mb-4 ml-2">
+                <Filter/>
+                <span>Filter</span>
+            </h3>
+            <div className="flex flex-wrap gap-4 mb-12">
+                {categories.map((category, key) => (
+                    <button 
+                        key={key} 
+                        onClick={ () => setActiveCategory(category) }
+                        className={ classNs("px-5 py-2 rounded-full transition-colors duration-700 capitalize",
+                            activeCategory === category 
+                                ? "bg-primary text-primary-foreground" 
+                                : "bg-secondary/70 text-foreground hover:bg-secondary"
+                        )}>
+                        {category}
+                    </button>
+                ))}
             </div>
-        </section>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredSkills.map((skill, key) => (
+                    <SkillCard key={key} skill={skill} delay={key * 80}/>
+                ))}
+            </div>
+        </div>
     )
 }
 

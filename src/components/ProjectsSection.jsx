@@ -60,29 +60,24 @@ const projects = [
     },
 ];
 
-export const ProjectsSection = () => {
-    const sectionRef = useRef(null);
-    const isVisible = useOnScreen(sectionRef, "-100px");      // small margin for early trigger
+export default function ProjectsSection() {
 
-    return (
-        <section id="projects" ref={sectionRef} 
-            className={`py-24 px-4 relative transition-all duration-700 transform ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}>
+    try {
+        return (
             <div className="container mx-auto max-w-5xl">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center"> Featured <span className="text-primary"> Projects </span></h2>
                 <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
                     Here are some of my recent projects. Each project was carefully crafted with attention to detail,
                     performance & user experience.
                 </p>
-
+    
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {projects.map((project, key) => (
                         <ProjectCard 
                             key={project.id} project={project} delay={key * 120}/>
                     ))}
                 </div>
-
+    
                 <div className="text-center mt-12">
                     {/* Set the "role" to be button */}
                     <a href="https://www.github.com/karthi1048" target="_blank" rel="noopener noreferrer"
@@ -91,16 +86,21 @@ export const ProjectsSection = () => {
                     </a>
                 </div>
             </div>
-        </section>
-    )
+        )
+    } catch (error) {
+        console.error("Error in the section: ", error);
+        return <div>Error loading section: {error.message}</div>
+    }
 }
+
 
 const ProjectCard = ({ project, delay }) => {
     const ref = useRef(null);
     const isVisible = useOnScreen(ref, "-60px");      // small margin for early trigger
 
     return (
-        <div    
+        <div 
+            // id='projects'
             ref={ref}
             style={{ transitionDelay: `${delay}ms` }}
             className={`group bg-card rounded-lg overflow-hidden shadow-xs card-hover 
@@ -108,7 +108,7 @@ const ProjectCard = ({ project, delay }) => {
                 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <div className="h-48 overflow-hidden">
                 {/* Image expands within the card */}
-                <img src={project.image} alt={project.title} 
+                <img src={project.image} alt={project.title} loading='lazy'
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"/>
             </div>
             <div className="p-6">

@@ -1,15 +1,83 @@
-import { useEffect, useState } from "react";
-import { AboutMe } from "../components/AboutMe"
-import { ContactSection } from "../components/ContactSection"
-import { FooterSection } from "../components/FooterSection"
+import { useEffect, useState, Suspense, lazy, useRef } from "react";
+import useOnScreen from "../hooks/useOnScreen";
+import { StarBackground } from "../components/StarBackground"
 import { HeroSection } from "../components/HeroSection"
 import { Navbar } from "../components/Navbar"
-import { ProjectsSection } from "../components/ProjectsSection"
-import { SkillsSection } from "../components/SkillsSection"
-import { StarBackground } from "../components/StarBackground"
+import { FooterSection } from "../components/FooterSection"
+// import ProjectsSection from "../components/ProjectsSection";
+// import AboutMe from "../components/AboutMe"
+// import SkillsSection from "../components/SkillsSection"
+// import ContactSection from "../components/ContactSection"
+
+// import("../components/ProjectsSection").then((mod) => {
+//     console.log("Project section module keys: ", Object.keys(mod));
+//     console.log("Default export type: ", typeof mod.default);
+// });
+
+// lazy imports for sections - resilient against double default exports
+const AboutMe = lazy(async() => {
+    const mod = await import("../components/AboutMe");
+    // Handle double default wrapping safety
+    return { default: mod.default || mod.AboutMe };
+});
+
+const SkillsSection = lazy(async() => {
+    const mod = await import("../components/SkillsSection");
+    // Handle double default wrapping safety
+    return { default: mod.default || mod.SkillsSection };
+});
+
+const ProjectsSection = lazy(async() => {
+    const mod = await import("../components/ProjectsSection");
+    // Handle double default wrapping safety
+    return { default: mod.default || mod.ProjectsSection };
+});
+const ContactSection = lazy(async() => {
+    const mod = await import("../components/ContactSection");
+    // Handle double default wrapping safety
+    return { default: mod.default || mod.ContactSection };
+});
 
 export const Home = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);         // default = light mode
+
+    // Refs for each section
+    const aboutRef = useRef(null);
+    const skillsRef = useRef(null);
+    const projectsRef = useRef(null);
+    const contactRef = useRef(null);
+
+    // Detect when user scrolls near the section
+    const isNearAbout = useOnScreen(aboutRef, "-200px");
+    const isNearSkills = useOnScreen(skillsRef, "-200px");
+    const isNearProjects = useOnScreen(projectsRef, "-200px");
+    const isNearContact = useOnScreen(contactRef, "-200px");
+
+    // Persistent Flags
+    const [hasLoadedAbout, setHasLoadedAbout] = useState(false);
+    const [hasLoadedProjects, setHasLoadedProjects] = useState(false);
+    const [hasLoadedSkills, setHasLoadedSkills] = useState(false);
+    const [hasLoadedContact, setHasLoadedContact] = useState(false);
+
+    // preload each section when near viewport
+    useEffect(() => {
+        if (isNearAbout) {
+            setHasLoadedAbout(true);
+            import("../components/AboutMe");
+        }
+        if (isNearSkills) {
+            setHasLoadedSkills(true);
+            import("../components/SkillsSection");
+        }
+        if (isNearProjects) {
+            setHasLoadedProjects(true);
+            import("../components/ProjectsSection");
+        }
+        if (isNearContact) {
+            setHasLoadedContact(true);
+            import("../components/ContactSection");
+        }
+    }, [isNearAbout, isNearProjects, isNearSkills, isNearContact]);
 
     // Initial theme check on page load
     useEffect(() => {
@@ -48,14 +116,42 @@ export const Home = () => {
             <header>
                 <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme}/>
             </header>
-            <main>
+            <main className="overflow-x-hidden">
                 <HeroSection/>
-                <AboutMe/>
-                <SkillsSection/>
-                <ProjectsSection/>
-                <ContactSection/>
+                <section ref={aboutRef} id="about" className="py-24 px-4 relative">
+                    <Suspense fallback={ <SectionLoader name="About" /> }>
+                        { hasLoadedAbout ? <AboutMe /> : <Placeholder name="About" />}
+                    </Suspense>
+                </section>
+                <section ref={skillsRef} id="skills" className="py-24 px-4 relative bg-secondary/30">
+                    <Suspense fallback={ <SectionLoader name="Skills" /> }>
+                        { hasLoadedSkills ? <SkillsSection /> : <Placeholder name="Skills" />}
+                    </Suspense>
+                </section>
+                <section ref={projectsRef} id="projects" className="py-24 px-4 relative">
+                    <Suspense fallback={ <SectionLoader name="Projects" /> }>
+                        { hasLoadedProjects ? <ProjectsSection /> : <Placeholder name="Projects" />}
+                    </Suspense>
+                </section>
+                <section ref={contactRef} id="contact" className="py-24 px-4 relative bg-secondary/30">
+                    <Suspense fallback={ <SectionLoader name="Contact Form" /> }>
+                        { hasLoadedContact ? <ContactSection /> : <Placeholder name="Contact" />}
+                    </Suspense>
+                </section>
             </main>
             <FooterSection/>
         </div>
     )
 }
+
+const SectionLoader = ({ name }) => (
+    <div className="flex justify-center items-center py-20 text-foreground/70 animate-pulse">
+        <p>Loading {name}....</p>
+    </div>
+)
+
+const Placeholder = ({ name }) => (
+    <div className="min-h-[80vh] flex items-center justify-center text-foreground/40 italic text-center">
+        <p>Scroll to load {name} section...</p>
+    </div>
+)
