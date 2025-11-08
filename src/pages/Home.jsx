@@ -134,6 +134,7 @@ export const Home = () => {
                     </Suspense>
                 </section>
                 <section ref={contactRef} id="contact" className="py-24 px-4 relative bg-secondary/30">
+                    {/* <ContactSection/> */}
                     <Suspense fallback={ <SectionLoader name="Contact Form" /> }>
                         { hasLoadedContact ? <ContactSection /> : <Placeholder name="Contact" />}
                     </Suspense>
