@@ -82,13 +82,17 @@ const SkillCard = ({ skill, delay }) => {
             <div className="text-left mb-4 flex justify-between items-center">
                 <h3 className="font-semibold text-lg">{ skill.name }</h3>
                 <img src={ skill.icon } alt={ skill.name + " Logo" } />
-                </div>
-                <div className="flex items-center gap-1">
+            </div>
+            <div className="flex items-center gap-1">
                 <div className="w-full bg-secondary/50 h-2 rounded-full overflow-hidden">
                     <div className="bg-primary h-2 rounded-full origin-left animate-[grow_1.5s_ease-out]"
                         style={{width: skill.level + "%"}}
                     />
                 </div>
+                {/* <progress max={100} value={skill.level}></progress> */}
+                {/* <meter value={skill.level} max="100" min="0"></meter> */}
+                {/* <progress max="100" value="20"></progress> */}
+                {/* <meter max="100" min="0" value="60" low="20" optimum="40" high="70"></meter> */}
                 <span className="text-sm text-muted-foreground">{ skill.level }%</span>
             </div>
         </div>

@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
+import { Projects } from './pages/Projects'
 import { NotFound } from './pages/NotFound'
 import { Toaster } from './components/ui/toaster'
 
@@ -13,6 +14,8 @@ function App() {
         <Routes>
           {/* Index page route */}
           <Route index element={ <Home/> } />
+          {/* Projects page */}
+          <Route path="/projects" element={ <Projects/> }/>
           {/* Not Found page route */}
           <Route path='*' element={ <NotFound/> } />
         </Routes>

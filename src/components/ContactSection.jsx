@@ -107,25 +107,38 @@ export const ContactSection = () => {
                 {/* Right side */}
                 <div className="bg-card p-8 rounded-lg shadow-xs" >
                     <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
-                    <form action="" onSubmit={ handleSubmit } className="space-y-6">
-                        <div>
+                    <form action="" onSubmit={ handleSubmit } className="w-full max-w-lg flex flex-col gap-10">
+                        <div className="relative">
                             {/* Need to add "autocomplete" attribute for the 2 inputs */}
-                            <label htmlFor="name" className="block text-sm font-medium mb-2">Your Name</label>
+                            <label 
+                                htmlFor="name" 
+                                className="absolute -top-3 left-3 px-2 text-sm z-10">
+                                Your Name
+                            </label>
+                            {/* <span className="absolute -top-3 left-3 bg-cyan-100 right-auto h-3 w-16 z-[5] pointer-events-none">a</span> */}
                             <input 
                                 required type="text" id="name" name="name" placeholder="John"
-                                className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"/>
+                                className="w-full p-4 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 relative z-0"/>
                         </div>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium mb-2">Your Email</label>
+                        <div className="relative">
+                            <label 
+                                htmlFor="email" 
+                                className="absolute -top-3 left-3 px-2 text-sm z-10">
+                                Your Email
+                            </label>
                             <input 
                                 required type="email" id="email" name="email" placeholder="abc@gmail.com"
-                                className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"/>
+                                className="w-full p-4 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 relative z-0"/>
                         </div>
-                        <div>
-                            <label htmlFor="message" className="block text-sm font-medium mb-2">Your Message</label>
+                        <div className="relative">
+                            <label 
+                                htmlFor="message" 
+                                className="absolute -top-3 left-3 px-2 text-sm z-10">
+                                Your Message
+                            </label>
                             <textarea 
-                                required id="message" name="message" placeholder="Hello, I'd like to talk about..."
-                                className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary resize-none">
+                                required id="message" name="message" placeholder="Hello, I'd like to talk about..." rows="5"
+                                className="w-full p-4 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 relative z-0 resize-none">
                             </textarea>
                         </div>
                         <button type="submit" disabled={ isSubmitting }
