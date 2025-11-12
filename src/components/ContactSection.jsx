@@ -1,24 +1,44 @@
 import { Instagram, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react"
+import emailjs from "@emailjs/browser";
 import { classNs } from "../lib/utils"
 import { useToast } from "@/hooks/use-toast"
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Globe } from "./Globe";
 
 export const ContactSection = () => {
     const { toast } = useToast();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const formRef = useRef();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        setTimeout(() => {
+        // EMAIL JS Settings
+        try {
+            await emailjs.sendForm(
+                import.meta.env.VITE_EMAILJS_SERVICE_ID,
+                import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+                formRef.current,
+                { publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY },
+            )
             toast({
-                title: "Message Sent!",
-                description: "Thank you for your message. I'll get back to you soon."
+                title: "✅ Message Sent!",
+                description: "Thank you for your message. I'll get back to you soon.",
+                duration: 4000,
             });
+            e.target.reset();
+        } catch (error) {
+            console.error("EmailJS Error: ", error);
+            toast({
+                title: "❌ Failed to Send",
+                description: "Something went wrong, Please try again later",
+                variant: "destructive",
+                duration: 5000,
+            });
+        } finally {
             setIsSubmitting(false);
-        }, 1500);
+        }
     };
 
     return (
@@ -107,27 +127,27 @@ export const ContactSection = () => {
                 {/* Right side */}
                 <div className="bg-card p-8 rounded-lg shadow-xs" >
                     <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
-                    <form action="" onSubmit={ handleSubmit } className="w-full max-w-lg flex flex-col gap-10">
+                    <form ref={formRef} onSubmit={ handleSubmit } className="w-full max-w-lg flex flex-col gap-10">
                         <div className="relative">
                             {/* Need to add "autocomplete" attribute for the 2 inputs */}
                             <label 
-                                htmlFor="name" 
+                                htmlFor="from_name" 
                                 className="absolute -top-3 left-3 px-2 text-sm z-10">
                                 Your Name
                             </label>
                             {/* <span className="absolute -top-3 left-3 bg-cyan-100 right-auto h-3 w-16 z-[5] pointer-events-none">a</span> */}
                             <input 
-                                required type="text" id="name" name="name" placeholder="John"
+                                required type="text" id="from_name" name="from_name" placeholder="John" autoComplete="name"
                                 className="w-full p-4 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 relative z-0"/>
                         </div>
                         <div className="relative">
                             <label 
-                                htmlFor="email" 
+                                htmlFor="user_email" 
                                 className="absolute -top-3 left-3 px-2 text-sm z-10">
                                 Your Email
                             </label>
                             <input 
-                                required type="email" id="email" name="email" placeholder="abc@gmail.com"
+                                required type="email" id="user_email" name="user_email" placeholder="abc@gmail.com" autoComplete="email"
                                 className="w-full p-4 rounded-md border bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0 relative z-0"/>
                         </div>
                         <div className="relative">

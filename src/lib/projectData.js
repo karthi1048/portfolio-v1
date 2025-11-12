@@ -1,0 +1,58 @@
+import { imageMap }  from '../lib/assetLoader';
+
+export const projects = [
+    {
+        id: 1,
+        title: "Diabetes Predictor For Females",
+        description: "A page for the website 2",
+        image: imageMap['diabetes_predictor.png'],
+        tags: ["Python", "Streamlit"],
+        demoUrl: "https://huggingface.co/spaces/karthi1048/diabetes-predictor-for-females",
+        githubUrl: "https://github.com/karthi1048/diabetes-predictor.git",
+    },
+    {
+        id: 2,
+        title: "Kanban PWA",
+        description: "A page for the website 2",
+        image: imageMap['kanban_pwa.png'],
+        tags: ["React", "Tailwind", "Vite SWR"],
+        demoUrl: "https://kanban-pwa.netlify.app/",
+        githubUrl: "https://github.com/karthi1048/kanban-PWA.git",
+    },
+    {
+        id: 3,
+        title: "Render Gallery",
+        description: "A page for the website 3",
+        image: imageMap['render_gallery.png'],
+        tags: ["Javascript", "Bootstrap"],
+        demoUrl: "https://karthi1048.github.io/render-gallery/",
+        githubUrl: "https://github.com/karthi1048/render-gallery.git",
+    },
+    {
+        id: 4,
+        title: "2048 Game",
+        description: "A page for the website",
+        image: imageMap['2048_game.png'],
+        tags: ["Javascript"],
+        demoUrl: "https://karthi1048.github.io/2048/",
+        githubUrl: "https://github.com/karthi1048/2048.git",
+    },
+    {
+        id: 5,
+        title: "Tic Tac Toe Game",
+        description: "A page for the website 2",
+        image: imageMap['tic_tac_toe_game.png'],
+        tags: ["Javascript"],
+        demoUrl: "https://karthi1048.github.io/Tic-Tac-Toe/",
+        githubUrl: "https://github.com/karthi1048/Tic-Tac-Toe.git",
+    },
+    {
+        id: 6,
+        title: "Rock Paper Scissors Game",
+        description: "A page for the website 2",
+        image: imageMap['rock_paper_scissors_game.png'],
+        tags: ["Javascript"],
+        demoUrl: "https://karthi1048.github.io/RPS-Project/",
+        githubUrl: "https://github.com/karthi1048/RPS-Project.git",
+    },
+];
