@@ -47,7 +47,7 @@ export const Navbar = ({ isDarkMode, toggleTheme }) => {
                     {navItems.map((item, key) => (
                         <a 
                             key={key} href={ item.href } 
-                            className="text-foreground/80 hover:text-primary flex gap-3 transition-colors duration-300">
+                            className="text-foreground/80 hover:bg-primary/50 p-1 rounded flex gap-3 transition-colors duration-300">
                             <span>{ item.svgLogo }</span>
                             <span>{ item.name }</span>
                         </a>

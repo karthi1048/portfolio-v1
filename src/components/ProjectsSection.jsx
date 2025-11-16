@@ -29,7 +29,7 @@ export default function ProjectsSection() {
                     {/* Below JSX code becomes "children" */}
                     {selectedProject && (
                         <div>
-                            <h3 className="text-2xl font-semibold mb-2">{selectedProject.title}</h3>
+                            <h3 className="text-2xl font-semibold mt-8 mb-2">{selectedProject.title}</h3>
                             {/* 
                             dangerouslySetInnerHTML -> Renders HTML safely for static content
                             NOTE: [&_ul]:list-disc [&_ul]:list-inside -> to all ul elements inside it, have 'disc inside'

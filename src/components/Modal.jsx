@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 export default function Modal({ isOpen, onClose, children }) {
 
-    // Stop scroll while modal is OPEN
+    // Stop body scroll while modal is OPEN
     useEffect(() => {
         isOpen ? document.body.style.overflow = "hidden" : document.body.style.overflow = "";
         return () => document.body.style.overflow = "";                                     // cleanup
@@ -24,12 +24,12 @@ export default function Modal({ isOpen, onClose, children }) {
 
     return (
         <div onClick={onClose}
-            className={`fixed inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-md p-4
-                transition-all duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
+            className={`fixed inset-0 z-50 flex items-start md:items-center justify-center overflow-hidden bg-background/50 backdrop-blur-md
+                p-4 transition-all duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
             <div onClick={(e) => e.stopPropagation()}
-                className="relative rounded-2xl bg-background shadow-xl max-w-lg w-full p-6">
+                className="relative rounded-2xl bg-background shadow-xl max-w-xl max-h-[90vh] overflow-y-auto w-full p-6">
                 <button onClick={onClose}
-                    className="absolute top-3 right-3 hover:bg-primary">
+                    className="absolute top-3 right-3 ml-auto p-1 rounded hover:bg-primary/50 transition z-20">
                     <X size={22} />
                 </button>
                 { children }
