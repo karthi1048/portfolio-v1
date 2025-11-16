@@ -30,7 +30,14 @@ export default function ProjectsSection() {
                     {selectedProject && (
                         <div>
                             <h3 className="text-2xl font-semibold mb-2">{selectedProject.title}</h3>
-                            <p className="text-sm mb-4">{selectedProject.description}</p>
+                            {/* 
+                            dangerouslySetInnerHTML -> Renders HTML safely for static content
+                            NOTE: [&_ul]:list-disc [&_ul]:list-inside -> to all ul elements inside it, have 'disc inside'
+                            */}
+                            <div 
+                                className='text-muted-foreground text-left leading-relaxed space-y-2 [&_ul]:list-disc [&_ul]:list-inside'
+                                dangerouslySetInnerHTML={{ __html: selectedProject.description }}
+                            />
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {selectedProject.tags.map((tag, key) => (
                                     <span key={key} className="px-2 py-1 text-xs font-medium rounded-full border bg-primary/20 text-secondary-foreground">{tag}</span>
@@ -98,7 +105,7 @@ const ProjectCard = ({ project, delay, onClick }) => {
                     ))}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                <p className="text-sm text-muted-foreground mb-4">{project.shortDescription}</p>
             </div>
         </div>
     )

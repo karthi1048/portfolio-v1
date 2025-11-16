@@ -72,30 +72,30 @@
 @layer base {
   /* light theme */
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-    --border: 214 32% 91%;
+    --background: 210 40% 98%;    /* very light gray */
+    --foreground: 222 47% 11%;   /* very dark gray */
+    --border: 214 20% 80%;     /* darker */
     
-    --card: 0 0% 100%;
+    --card: 0 0% 100%;      /* pure white */
 
-    --primary: 250 47% 60%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 250 47% 45%;                    /* dark purple */
+    --primary-foreground: 210 40% 98%;         /* almost white */
   }
 
   /* dark theme */
   .dark {
-    --background: 222 47% 4%;
-    --foreground: 213 31% 91%;
-    --border: 217 33% 20%;
+    --background: 222 47% 4%;      /* near black */
+    --foreground: 213 31% 91%;     /* pale gray */
+    --border: 217 20% 35%;          /* lighter */
 
-    --card: 222 47% 8%;
+    --card: 222 47% 8%;       /* dark charcoal */
 
-    --primary: 250 65% 65%;
-    --primary-foreground: 213 31% 91%;
+    --primary: 250 47% 45%;                    /* dark purple */
+    --primary-foreground: 213 31% 91%;        /* pale gray */
   }
 
+  /* applying border with --border color */
   * {
-    /* applying border with --border color */
     @apply border-border;
   }
 
