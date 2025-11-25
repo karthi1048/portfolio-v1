@@ -6,7 +6,7 @@ export const ThemeToggle = ({ isDarkMode, toggleTheme }) => {
         <button 
                 onClick={ toggleTheme }
                 aria-label={ isDarkMode ? "Light Mode" : "Dark Mode" }
-                className={"transition-colors duration-300 flex gap-3 cursor-pointer focus:outline-hidden"}
+                className={"transition-colors duration-300 flex gap-3 cursor-pointer hover:bg-primary/50"}
             >
                 <span>
                     { isDarkMode 

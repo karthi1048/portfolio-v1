@@ -3,12 +3,13 @@ import { Briefcase, Code, FileText, User } from "lucide-react"
 export default function AboutMe() {
     return (
         <div className="container mx-auto max-w-5xl">
+            {/* Content Heading */}
             <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
                 About <span className="text-primary"> Me</span>
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 {/* Left side */}
-                <div className="space-y-6">
+                <article className="space-y-6">
                     <h3 className="text-2xl font-semibold">Passionate Web Developer & Learner</h3>
                     <p className="text-muted-foreground">
                         With one year of experience in web development, I specialize in creating responsive, accessible,
@@ -19,20 +20,23 @@ export default function AboutMe() {
                         technologies & techniques to stay at the forefront of the ever-evolving web landscape.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
-                        <a href="#contact" className="cosmic-button">
+                        <a href="#contact" className="cosmic-button text-center">
                             Get In Touch
                         </a>
                         {/* CV */}
-                        <a href="" className="px-6 py-2 flex gap-2 justify-center rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300">
+                        <a href="" target="_blank" rel="noopener noreferrer" 
+                            // className="px-6 py-2 flex gap-2 justify-center rounded-full border border-primary text-primary hover:bg-primary/10 transition-colors duration-300"
+                            className="cosmic-button flex justify-center gap-2"
+                        >
                             <span>View My CV</span>
                             <FileText/>
                         </a>
                     </div>
-                </div>
+                </article>
                 {/* Right side */}
                 <div className="grid grid-cols-1 gap-6">
                     {/* Card 1 - Code */}
-                    <div className="gradient-border p-6 card-hover">
+                    <article className="gradient-border p-6 card-hover">
                         <div className="flex items-start gap-4">
                             <div className="p-3 rounded-full bg-primary/10">
                                 <Code className="h-6 w-6 text-primary"/>
@@ -44,9 +48,9 @@ export default function AboutMe() {
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </article>
                     {/* Card 2 - User (UI) */}
-                    <div className="gradient-border p-6 card-hover">
+                    <article className="gradient-border p-6 card-hover">
                         <div className="flex items-start gap-4">
                             <div className="p-3 rounded-full bg-primary/10">
                                 <User className="h-6 w-6 text-primary"/>
@@ -58,9 +62,9 @@ export default function AboutMe() {
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </article>
                     {/* Card 3 - Experience (UX) */}
-                    <div className="gradient-border p-6 card-hover">
+                    <article className="gradient-border p-6 card-hover">
                         <div className="flex items-start gap-4">
                             <div className="p-3 rounded-full bg-primary/10">
                                 <Briefcase className="h-6 w-6 text-primary"/>
@@ -72,7 +76,7 @@ export default function AboutMe() {
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </article>
                 </div>
             </div>
         </div>

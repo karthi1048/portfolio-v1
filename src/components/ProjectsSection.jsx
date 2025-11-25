@@ -1,111 +1,90 @@
-import { useRef, useState } from 'react';
-import useOnScreen from '../hooks/useOnScreen';
+import { useState } from 'react';
 import { projects } from '../lib/projectData';
+import { ProjectCard } from './ProjectCard';
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { sanitizeHTML } from '../lib/sanitizeHTML';
+import useFocusReturn from '../hooks/useFocusReturn';
 import Modal from './Modal';
 
 export default function ProjectsSection() {
     const [selectedProject, setSelectedProject] = useState(null);
+    const { remember, restore } = useFocusReturn();
 
-    try {
-        return (
-            <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center"> Featured <span className="text-primary"> Projects </span></h2>
-                <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-                    Here are some of my recent projects. Each project was carefully crafted with attention to detail,
-                    performance & user experience.
-                </p>
-    
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {projects.map((project, key) => (
-                        <ProjectCard 
-                            key={project.id} project={project} delay={key * 120}
-                            onClick={ () => setSelectedProject(project) }
-                        />
-                    ))}
-                </div>
+    const openModal = (project, triggerElement) => {
+        remember(triggerElement);
+        setSelectedProject(project);
+    };
 
-                <Modal isOpen={!!selectedProject} onClose={ () => setSelectedProject(null) }>
-                    {/* Below JSX code becomes "children" */}
-                    {selectedProject && (
-                        <div>
-                            <h3 className="text-2xl font-semibold mt-8 mb-2">{selectedProject.title}</h3>
-                            {/* 
-                            dangerouslySetInnerHTML -> Renders HTML safely for static content
-                            NOTE: [&_ul]:list-disc [&_ul]:list-inside -> to all ul elements inside it, have 'disc inside'
-                            */}
-                            <div 
-                                className='text-muted-foreground text-left leading-relaxed space-y-2 [&_ul]:list-disc [&_ul]:list-inside'
-                                dangerouslySetInnerHTML={{ __html: selectedProject.description }}
-                            />
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                {selectedProject.tags.map((tag, key) => (
-                                    <span key={key} className="px-2 py-1 text-xs font-medium rounded-full border bg-primary/20 text-secondary-foreground">{tag}</span>
-                                ))}
-                            </div>
-                            <div className="flex gap-3">
-                                <a 
-                                    href={selectedProject.demoUrl} target="_blank" rel="noopener noreferrer"
-                                    className="px-4 py-2 rounded-md text-foreground/80 hover:text-primary transition-colors duration-300"
-                                >
-                                    <span><ExternalLink size={20}/></span>
-                                    <span>Live Demo</span>
-                                </a>
-                                <a 
-                                    href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer"
-                                    className="px-4 py-2 rounded-md text-foreground/80 hover:text-primary transition-colors duration-300"
-                                >
-                                    <span><Github size={20}/></span>
-                                    <span>Source Code</span>
-                                </a>
-                            </div>
-                        </div>
-                    )}
-                </Modal>
-
-                <div className="text-center mt-12">
-                    {/* Set the "role" to be button */}
-                    <a href="https://www.github.com/karthi1048" target="_blank" rel="noopener noreferrer"
-                        className="cosmic-button w-fit flex items-center mx-auto gap-2"
-                    >
-                        Check My Github <ArrowRight size={16}/>
-                    </a>
-                </div>
-            </div>
-        )
-    } catch (error) {
-        console.error("Error in the section: ", error);
-        return <div>Error loading section: {error.message}</div>
+    const closeModal = () => {
+        setSelectedProject(null);
+        restore();
     }
-}
-
-
-const ProjectCard = ({ project, delay, onClick }) => {
-    const ref = useRef(null);
-    const isVisible = useOnScreen(ref, "-60px");      // small margin for early trigger
 
     return (
-        <div 
-            // id='projects'
-            ref={ref} 
-            onClick={onClick}
-            style={{ transitionDelay: `${delay}ms` }}
-            className={`group bg-card rounded-lg overflow-hidden shadow-xs card-hover 
-                transition-all duration-300 ease-out transform 
-                ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="h-48 overflow-hidden">
-                {/* Image expands within the card */}
-                <img src={project.image} alt={project.title} loading='lazy'
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"/>
+        <div className="container mx-auto max-w-5xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center"> 
+                Featured <span className="text-primary"> Projects </span>
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+                Here are some of my recent projects. Each project was carefully crafted with attention to detail,
+                performance & user experience.
+            </p>
+
+            <div aria-live='polite' className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {projects.map((project, key) => (
+                    <ProjectCard 
+                        onOpen={(element) => openModal(project, element)}
+                        key={project.id} project={project} delay={key * 120}
+                    />
+                ))}
             </div>
-            <div className="p-6">
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tags.map((tag, key) => (
-                        <span key={key} className="px-2 py-1 text-xs font-medium rounded-full border bg-primary/20 text-secondary-foreground">{tag}</span>
-                    ))}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{project.shortDescription}</p>
+
+            <Modal 
+                isOpen={!!selectedProject}
+                onClose={closeModal}>
+                {/* Below JSX code becomes "children" */}
+                {selectedProject && (
+                    <div>
+                        <h3 id={`project-title-${selectedProject.id}`} className="text-2xl font-semibold mt-8 mb-2">
+                            {selectedProject.title}
+                        </h3>
+                        {/* dangerouslySetInnerHTML -> Renders HTML safely for static content */}
+                        {/* NOTE: [&_ul]:list-disc [&_ul]:list-inside -> to all ul elements inside it, have 'disc inside' */}
+                        <div 
+                            className='text-muted-foreground text-left leading-relaxed space-y-2 [&_ul]:list-disc [&_ul]:list-inside'
+                            dangerouslySetInnerHTML={{ __html: sanitizeHTML(selectedProject.description) }}
+                        />
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {selectedProject.tags.map((tag, key) => (
+                                <span key={key} className="px-2 py-1 text-xs font-medium rounded-full border bg-primary/20 text-secondary-foreground">{tag}</span>
+                            ))}
+                        </div>
+                        <div className="flex gap-3">
+                            <a 
+                                href={selectedProject.demoUrl} target="_blank" rel="noopener noreferrer"
+                                className="px-4 py-2 rounded-md text-foreground/80 hover:text-primary transition-colors duration-300"
+                            >
+                                <span><ExternalLink aria-hidden='true' size={20}/></span>
+                                <span>Live Demo</span>
+                            </a>
+                            <a 
+                                href={selectedProject.githubUrl} target="_blank" rel="noopener noreferrer"
+                                className="px-4 py-2 rounded-md text-foreground/80 hover:text-primary transition-colors duration-300"
+                            >
+                                <span><Github aria-hidden='true' size={20}/></span>
+                                <span>Source Code</span>
+                            </a>
+                        </div>
+                    </div>
+                )}
+            </Modal>
+
+            <div className="text-center mt-12">
+                <a href="/Projects" target="_blank" rel="noopener noreferrer" role='button'
+                    className="cosmic-button w-fit flex items-center mx-auto gap-2"
+                >
+                    More Projects...<ArrowRight size={16}/>
+                </a>
             </div>
         </div>
     )

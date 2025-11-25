@@ -4,39 +4,40 @@ import { StarBackground } from "../components/StarBackground"
 import { HeroSection } from "../components/HeroSection"
 import { Navbar } from "../components/Navbar"
 import { FooterSection } from "../components/FooterSection"
-// import ProjectsSection from "../components/ProjectsSection";
-// import AboutMe from "../components/AboutMe"
-// import SkillsSection from "../components/SkillsSection"
-// import ContactSection from "../components/ContactSection"
 
-// import("../components/ProjectsSection").then((mod) => {
-//     console.log("Project section module keys: ", Object.keys(mod));
-//     console.log("Default export type: ", typeof mod.default);
-// });
+// Lazy import wrappers for sections
+const loadAbout = () => import("../components/AboutMe");
+const AboutMe = lazy(() => loadAbout().then(mod => ({ default: mod.default || mod.AboutMe })));
 
-// lazy imports for sections - resilient against double default exports
-const AboutMe = lazy(async() => {
-    const mod = await import("../components/AboutMe");
-    // Handle double default wrapping safety
-    return { default: mod.default || mod.AboutMe };
-});
+const loadSkills = () => import("../components/SkillsSection");
+const SkillsSection = lazy(() => loadSkills().then(mod => ({ default: mod.default || mod.SkillsSection })));
 
-const SkillsSection = lazy(async() => {
-    const mod = await import("../components/SkillsSection");
-    // Handle double default wrapping safety
-    return { default: mod.default || mod.SkillsSection };
-});
+const loadProjects = () => import("../components/ProjectsSection");
+const ProjectsSection = lazy(() => loadProjects().then(mod => ({ default: mod.default || mod.ProjectsSection })));
 
-const ProjectsSection = lazy(async() => {
-    const mod = await import("../components/ProjectsSection");
-    // Handle double default wrapping safety
-    return { default: mod.default || mod.ProjectsSection };
-});
-const ContactSection = lazy(async() => {
-    const mod = await import("../components/ContactSection");
-    // Handle double default wrapping safety
-    return { default: mod.default || mod.ContactSection };
-});
+const loadContact = () => import("../components/ContactSection");
+const ContactSection = lazy(() => loadContact().then(mod => ({ default: mod.default || mod.ContactSection })));
+
+// Local Error Boundaries
+function SectionErrorBoundary({ children }) {
+    return (
+        <ErrorBoundaryFallback>
+            { children }
+        </ErrorBoundaryFallback>
+    )
+}
+
+function ErrorBoundaryFallback({ children }) {
+    try {
+        return children;
+    } catch {
+        return (
+            <div role="alert" className="text-center text-red-500 py-20">
+                Failed to load Section.
+            </div>
+        )
+    }
+}
 
 export const Home = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);         // default = light mode
@@ -48,10 +49,10 @@ export const Home = () => {
     const contactRef = useRef(null);
 
     // Detect when user scrolls near the section
-    const isNearAbout = useOnScreen(aboutRef, "-200px");
-    const isNearSkills = useOnScreen(skillsRef, "-200px");
-    const isNearProjects = useOnScreen(projectsRef, "-200px");
-    const isNearContact = useOnScreen(contactRef, "-200px");
+    const isNearAbout = useOnScreen(aboutRef, "-300px");
+    const isNearSkills = useOnScreen(skillsRef, "-300px");
+    const isNearProjects = useOnScreen(projectsRef, "-300px");
+    const isNearContact = useOnScreen(contactRef, "-300px");
 
     // Persistent Flags
     const [hasLoadedAbout, setHasLoadedAbout] = useState(false);
@@ -61,23 +62,23 @@ export const Home = () => {
 
     // preload each section when near viewport
     useEffect(() => {
-        if (isNearAbout) {
+        if (isNearAbout && !hasLoadedAbout) {
             setHasLoadedAbout(true);
-            import("../components/AboutMe");
+            loadAbout();
         }
-        if (isNearSkills) {
+        if (isNearSkills && !hasLoadedSkills) {
             setHasLoadedSkills(true);
-            import("../components/SkillsSection");
+            loadSkills();
         }
-        if (isNearProjects) {
+        if (isNearProjects && !hasLoadedProjects) {
             setHasLoadedProjects(true);
-            import("../components/ProjectsSection");
+            loadProjects();
         }
-        if (isNearContact) {
+        if (isNearContact && !hasLoadedContact) {
             setHasLoadedContact(true);
-            import("../components/ContactSection");
+            loadContact();
         }
-    }, [isNearAbout, isNearProjects, isNearSkills, isNearContact]);
+    }, [isNearAbout, isNearProjects, isNearSkills, isNearContact, hasLoadedAbout, hasLoadedSkills, hasLoadedProjects, hasLoadedContact]);
 
     // Initial theme check on page load
     useEffect(() => {
@@ -85,14 +86,9 @@ export const Home = () => {
         // Check User's preference for dark mode
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const useDark =  storedTheme === "dark" || ( !storedTheme && prefersDark );
-
-        if (useDark) {
-            document.documentElement.classList.add("dark");
-            setIsDarkMode(true);
-        } else {
-            document.documentElement.classList.remove("dark");
-            setIsDarkMode(false);
-        }
+        // toggle the presence of dark class on that element 
+        document.documentElement.classList.toggle("dark", useDark);
+        setIsDarkMode(useDark);
     }, []);
 
     // Toggles theme & stores it
@@ -100,43 +96,51 @@ export const Home = () => {
         const newIsDark = !isDarkMode;                          // Flips mode
         setIsDarkMode(newIsDark);
 
-        if (newIsDark) {
-            document.documentElement.classList.add("dark");
-            localStorage.setItem("theme", "dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-            localStorage.setItem("theme", "light");
-        }
+        // toggle the presence of dark class on localStorage
+        document.documentElement.classList.toggle("dark", newIsDark);
+        localStorage.setItem("theme", newIsDark ? "dark" : "light");
     }
 
     return (
         <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
             {/* Background effects rendered only in dark mode*/}
-            { isDarkMode && <StarBackground/> }
+            { isDarkMode && <StarBackground aria-hidden="true" /> }
             <header>
                 <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme}/>
             </header>
-            <main className="overflow-x-hidden">
+            <main role="main" className="overflow-x-hidden">
                 <HeroSection/>
-                <section ref={aboutRef} id="about" className="py-24 px-4 relative">
+                <section ref={aboutRef} id="about" aria-labelledby="about-title" className="py-24 px-4 relative">
+                    {/* Landmark Headings for Screen Readers only */}
+                    <h2 id="about-title" className="sr-only">About Section</h2>
                     <Suspense fallback={ <SectionLoader name="About" /> }>
-                        { hasLoadedAbout ? <AboutMe /> : <Placeholder name="About" />}
+                        <SectionErrorBoundary>
+                            { hasLoadedAbout ? <AboutMe /> : <Placeholder name="About" />}
+                        </SectionErrorBoundary>
                     </Suspense>
                 </section>
-                <section ref={skillsRef} id="skills" className="py-24 px-4 relative bg-secondary/30">
+                <section ref={skillsRef} id="skills" aria-labelledby="skills-title" className="py-24 px-4 relative bg-secondary/30">
+                    <h2 id="skills-title" className="sr-only">Skills Section</h2>
                     <Suspense fallback={ <SectionLoader name="Skills" /> }>
-                        { hasLoadedSkills ? <SkillsSection /> : <Placeholder name="Skills" />}
+                        <SectionErrorBoundary>
+                            { hasLoadedSkills ? <SkillsSection /> : <Placeholder name="Skills" />}
+                        </SectionErrorBoundary>
                     </Suspense>
                 </section>
-                <section ref={projectsRef} id="projects" className="py-24 px-4 relative">
+                <section ref={projectsRef} id="projects" aria-labelledby="projects-title" className="py-24 px-4 relative">
+                    <h2 id="projects-title" className="sr-only">Projects Section</h2>
                     <Suspense fallback={ <SectionLoader name="Projects" /> }>
-                        { hasLoadedProjects ? <ProjectsSection /> : <Placeholder name="Projects" />}
+                        <SectionErrorBoundary>
+                            { hasLoadedProjects ? <ProjectsSection /> : <Placeholder name="Projects" />}
+                        </SectionErrorBoundary>
                     </Suspense>
                 </section>
-                <section ref={contactRef} id="contact" className="py-24 px-4 relative bg-secondary/30">
-                    {/* <ContactSection/> */}
+                <section ref={contactRef} id="contact" aria-labelledby="contact-title" className="py-24 px-4 relative bg-secondary/30">
+                    <h2 id="contact-title" className="sr-only">Contact Section</h2>
                     <Suspense fallback={ <SectionLoader name="Contact Form" /> }>
-                        { hasLoadedContact ? <ContactSection /> : <Placeholder name="Contact" />}
+                        <SectionErrorBoundary>
+                            { hasLoadedContact ? <ContactSection /> : <Placeholder name="Contact" />}
+                        </SectionErrorBoundary>
                     </Suspense>
                 </section>
             </main>
@@ -145,14 +149,16 @@ export const Home = () => {
     )
 }
 
+// Fallback components
+
 const SectionLoader = ({ name }) => (
-    <div className="flex justify-center items-center py-20 text-foreground/70 animate-pulse">
+    <div role="status" aria-live="polite" className="flex justify-center items-center py-20 text-foreground/70 animate-pulse">
         <p>Loading {name}....</p>
     </div>
 )
 
 const Placeholder = ({ name }) => (
-    <div className="min-h-[80vh] flex items-center justify-center text-foreground/40 italic text-center">
+    <div aria-live="off" className="min-h-[80vh] flex items-center justify-center text-foreground/40 italic text-center">
         <p>Scroll to load {name} section...</p>
     </div>
 )

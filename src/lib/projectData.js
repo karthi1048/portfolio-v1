@@ -52,7 +52,7 @@ export const projects = [
     {
         id: 3,
         title: "Render Gallery",
-        shortDescription: "a dynamic image gallery built with vanilla JS, Bootstrap, featuring filtering, modals & responsive layout",
+        shortDescription: "Dynamic image gallery built with vanilla JS, Bootstrap, featuring filtering, modals & responsive layout",
         description: `
         <br>
         <p>Render Gallery is an image & video art showcasing application created using plain Javascript and Bootstrap designed for optimal performance & minimal dependencies.</p>

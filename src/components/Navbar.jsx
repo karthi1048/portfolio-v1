@@ -4,11 +4,11 @@ import { Contact, FolderKanban, HomeIcon, Menu, User, Wrench, X } from "lucide-r
 import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
-    {name: "Home", href: "#hero", svgLogo: <HomeIcon/> },
-    {name: "About", href: "#about", svgLogo: <User/> },
-    {name: "Skills", href: "#skills", svgLogo: <Wrench/> },
-    {name: "Projects", href: "#projects", svgLogo: <FolderKanban/> },
-    {name: "Contact", href: "#contact", svgLogo: <Contact/> },    
+    {name: "Home", href: "#hero", svgLogo: <HomeIcon aria-hidden="true"/> },
+    {name: "About", href: "#about", svgLogo: <User aria-hidden="true"/> },
+    {name: "Skills", href: "#skills", svgLogo: <Wrench aria-hidden="true"/> },
+    {name: "Projects", href: "#projects", svgLogo: <FolderKanban aria-hidden="true"/> },
+    {name: "Contact", href: "#contact", svgLogo: <Contact aria-hidden="true"/> },    
 ];
 
 export const Navbar = ({ isDarkMode, toggleTheme }) => {
@@ -31,8 +31,8 @@ export const Navbar = ({ isDarkMode, toggleTheme }) => {
     }, [isMenuOpen]);
 
     return (
-        <nav className={classNs(
-            "fixed w-full z-40 transition-all duration-300",
+        <nav role="navigation" className={classNs(
+            "fixed w-full z-50 transition-all duration-300",
             isScrolled ? "py-3 shadow-xs bg-background/70 backdrop-blur-md" : "py-5"
             )}>
             <div className="container flex items-center justify-between">

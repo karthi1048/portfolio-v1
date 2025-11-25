@@ -20,6 +20,8 @@
   --animate-fade-in-delay-3: fade-in 0.7s ease-out 0.6s forwards;
   --animate-fade-in-delay-4: fade-in 0.7s ease-out 0.8s forwards;
 
+  --animate-grow: grow 1.5s ease-out forwards;
+
   @keyframes float {
     0%,
     100% {
@@ -65,6 +67,14 @@
     }
   }
 
+  @keyframes grow {
+    from {
+      width: 0%;
+    }
+    to {
+      width: var(--target-width, 100%);
+    }
+  }
 }
 
 /* directive to tell Tailwind which "bucket" a set of custom styles belong to. Valid layers are base, components & utilities.*/
@@ -72,31 +82,38 @@
 @layer base {
   /* light theme */
   :root {
-    --background: 210 40% 98%;    /* very light gray */
-    --foreground: 222 47% 11%;   /* very dark gray */
-    --border: 214 20% 80%;     /* darker */
+    --background: 210 40% 98%;                    /*  very light gray */
+    /* --background: 190 0% 97%;                   */
+    --foreground: 222 47% 11%;                      /* very dark gray */
+    --border: 214 20% 80%;                          /* darker */
     
-    --card: 0 0% 100%;      /* pure white */
+    --card: 0 0% 100%;                              /* pure white */
 
-    --primary: 250 47% 45%;                    /* dark purple */
-    --primary-foreground: 210 40% 98%;         /* almost white */
+    --primary: 250 47% 45%;                         /* dark purple */
+    --primary-foreground: 210 40% 98%;              /* almost white */
   }
 
   /* dark theme */
   .dark {
-    --background: 222 47% 4%;      /* near black */
-    --foreground: 213 31% 91%;     /* pale gray */
-    --border: 217 20% 35%;          /* lighter */
+    --background: 222 47% 4%;                       /* near black */
+    --foreground: 213 31% 91%;                      /* pale gray */
+    --border: 217 20% 35%;                          /* lighter */
 
-    --card: 222 47% 8%;       /* dark charcoal */
+    --card: 222 47% 8%;                             /* dark charcoal */
 
-    --primary: 250 47% 45%;                    /* dark purple */
-    --primary-foreground: 213 31% 91%;        /* pale gray */
+    --primary: 250 47% 45%;                         /* dark purple */
+    --primary-foreground: 213 31% 91%;              /* pale gray */
   }
 
   /* applying border with --border color */
-  * {
-    @apply border-border;
+  [class*="border"], [class^="border"] {
+    border-color: hsl(var(--border));
+  }
+  
+  /* Global fallback for focus-visible */
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
   }
 
   html {
@@ -149,7 +166,7 @@
   @apply relative rounded-md;
   background: linear-gradient(to right, hsl(var(--card)), hsl(var(--card)));
   background-clip: padding-box;
-  border: 1px solid transparent;
+  border: 5px solid transparent;
 }
 
 @utility cosmic-button {
@@ -172,5 +189,4 @@
   max-width: 100%;
   margin: 0 auto;
   padding: 0;
-  text-align: center;
 }

@@ -8,9 +8,9 @@ function App() {
 
   return (
     <>
-      {/* Toaster is from radix UI package */}
-      <Toaster/>
       <BrowserRouter>
+        {/* Toaster is from radix UI package */}
+        <Toaster/>
         <Routes>
           {/* Index page route */}
           <Route index element={ <Home/> } />
@@ -20,9 +20,8 @@ function App() {
           <Route path='*' element={ <NotFound/> } />
         </Routes>
       </BrowserRouter>
-      {/* <p className="example-card">Hello</p> */}
     </>
   )
 }
-
+// NOTE: Home.jsx contains the global semantic layout (header/main/footer)
 export default App

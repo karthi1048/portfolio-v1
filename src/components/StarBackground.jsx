@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 
 // star => id, size, x, y, opacity, animationDuration
 // meteor => id, size, x, y, delay, animationDuration
@@ -7,16 +7,7 @@ export const StarBackground = () => {
     const [stars, setStars] = useState([]);
     const [meteors, setMeteors] = useState([]);
 
-    useEffect(() => {
-        generateStars();
-        generateMeteors();
-        const handleResize = () => generateStars();
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const generateStars = () => {
+    const generateStars = useCallback(() => {
         const numberOfStars = Math.floor((window.innerWidth * window.innerHeight) / 10000);
         const newStars = [];
 
@@ -31,9 +22,9 @@ export const StarBackground = () => {
             });
         }
         setStars(newStars);
-    };
+    }, []);
 
-    const generateMeteors = () => {
+    const generateMeteors = useCallback(() => {
         const numberOfMeteors = 4;
         const newMeteors = [];
 
@@ -48,10 +39,27 @@ export const StarBackground = () => {
             });
         }
         setMeteors(newMeteors);
-    };
+    }, []);
+
+    useEffect(() => {
+        generateStars();
+        generateMeteors();
+
+        // Debounced Resize for rerendering stars
+        let timeout;
+        const handleResize = () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                generateStars();
+            }, 200);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [generateStars, generateMeteors]);
 
     return (
-        <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div role="presentation" aria-hidden="true" className="fixed inset-0 overflow-hidden pointer-events-none z-0">
             {stars.map((star) => (
                 <div key={ star.id } className="star animate-pulse-subtle" style={{
                     width: star.size + "px",

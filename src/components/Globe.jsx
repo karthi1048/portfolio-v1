@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { TextureLoader } from "three";
 import * as THREE from "three";
 
@@ -10,12 +10,8 @@ export const Globe = () => {
     const mountedRef = useRef(false);
 
     useEffect(() => {
-        mountedRef.current = true;
-        console.log("[Globe] mount");
-        return () => {
-            mountedRef.current = false;
-            console.log("[Globe] unmount");
-        }
+        mountedRef.current = true;                 // Globe mounts
+        return () => mountedRef.current = false;   // Globe unmounts
     }, []);
 
     // Delay to ensure GPU + DOM is ready before creating WebGL context
@@ -26,12 +22,12 @@ export const Globe = () => {
 
     // load textures only when ready
     useEffect(() => {
-        let cancelled = false;
         if(!ready) return;
+        let cancelled = false;
 
+        const loader = new TextureLoader();
         const load = async () => {
             try {
-                const loader = new TextureLoader();
                 const colorMap = await new Promise((res, rej) => {
                     loader.load("/textures/earthMap.jpg", res, undefined, rej);
                 });
@@ -39,47 +35,50 @@ export const Globe = () => {
                     loader.load("/textures/earthSpec.jpg", res, undefined, rej);
                 });
                 if (!cancelled) setText({ colorMap, specularMap: specMap });
-                console.log('[Globe] textures loaded', { colorMap: colorMap?.image?.width, specularMap: specMap?.image?.width, });
+                // console.log('[Globe] textures loaded', { colorMap: colorMap?.image?.width, specularMap: specMap?.image?.width, });
             } catch (error) {
                 console.error("[Globe] texture load failed: ", error);
             }
         };
         load();
-
-        return () => {
-            cancelled = true;
-        };
+        return () => cancelled = true;
     }, [ready]);
 
     // show placeholders while not ready or when textures not loaded
     if (!ready || !text.colorMap) {
         return (
-            <div className="w-[400px] h-[400px] bg-gray-800/40 flex items-center justify-center rounded-xl animate-pulse text-gray-400">
+            <div
+                role="status"
+                aria-live="polite"
+                className="w-[200px] h-[200px] bg-gray-800/40 flex items-center justify-center rounded-xl animate-pulse text-gray-400"
+            >
                 Initializing 3D Globe...
             </div>
         );
     }
 
     return (
-        <div className="w-full h-80 md:h-80">
+        <div className="w-full h-80 md:h-80 cursor-grab">
+            <p className="sr-only">
+                3D animated rotating Earth. Decorative visual only.
+            </p>
+
             <Canvas
+                aria-label="3D rotating Globe animation"
+                role="img"
                 dpr={[1,1]}
                 camera={{ position: [0, 0, 5], fov: 50 }}
                 gl={{antialias: true, preserveDrawingBuffer: false, powerPreference: "low-power", failIfMajorPerformanceCaveat: false}}
-                // style={{
-                //     width: "400px",
-                //     height: "400px",
-                //     borderRadius: "50%"
-                // }}
+                onPointerMissed={() => {}}
                 onCreated={( {gl} ) => {
                     try {
                         const canvas = gl.domElement;
-                        console.log("[Globe] GL created", {context: gl, canvasCount: document.querySelectorAll('canvas').length});
+                        // console.log("[Globe] GL created", {context: gl, canvasCount: document.querySelectorAll('canvas').length});
                         
                         // prevent context loss crash
                         const onLost = (e) => {
                             e.preventDefault();
-                            console.warn("WebGL Context lost (Globe) - Attempting Recovery");                        
+                            // console.warn("WebGL Context lost (Globe) - Attempting Recovery");                      
                         }
                         canvas.addEventListener("webglcontextlost", onLost);
                         // Fixing blank canvas issue by forcing resize redraw(re-render) after amount
@@ -92,9 +91,7 @@ export const Globe = () => {
                         console.error("[Globe] onCreated error", error);
                     }
                 }}
-                onPointerMissed={() => {}}
-                >
-                {/* Background stars for depth */}
+            >
                 {/* <Stars radius={100} depth={50} count={1000} factor={4} fade /> */}
 
                 {/* Light sources */}
@@ -103,10 +100,6 @@ export const Globe = () => {
 
                 {/* Animated globe */}
                 <Earth colorMap={text.colorMap} specularMap={text.specularMap}/>
-                {/* <Sphere args={[1, 64, 64]} scale={1.5}>
-                    <MeshDistortMaterial color="#3b82f6" attach="material" distort={0.3} speed={2} roughness={0.3}/>
-                    <meshStandardMaterial map={earthTexture}/>
-                </Sphere> */}
 
                 {/* Allow user interaction (drag/zoom) */}
                 <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.8} />
@@ -116,9 +109,6 @@ export const Globe = () => {
 };
 
 const Earth = ({ colorMap, specularMap }) => {
-    // const [colorMap, specularMap] = useLoader(TextureLoader, [
-    //     "/textures/earthMap.jpg", "/textures/earthSpec.jpg"
-    // ]);
 
     return (
         <group>
@@ -128,7 +118,8 @@ const Earth = ({ colorMap, specularMap }) => {
                 <meshPhongMaterial 
                     map={colorMap}
                     specularMap={specularMap}
-                    shininess={20}/>
+                    shininess={20}
+                />
             </mesh>
 
             {/* Slight glow effect using atmosphere */}
@@ -138,7 +129,8 @@ const Earth = ({ colorMap, specularMap }) => {
                     color="#3b82f6"
                     transparent
                     opacity={0.3}
-                    side={THREE.BackSide}/>
+                    side={THREE.BackSide}
+                />
             </mesh>
         </group>
     );
